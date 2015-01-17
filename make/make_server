@@ -1,0 +1,48 @@
+		   ##################################################
+		   #  __________________________________________    #
+		   # /\                                         \   #
+		   # \_|              Make file for server      |   #
+		   #   |                                        |   #
+	   	   #   |   _____________________________________|_  #
+  		   #    \_/_______________________________________/ #
+   		   ##################################################
+
+
+flag1 = -L/usr/lib/mysql -lmysqlclient -lz -lcrypt -lnsl -lm -L/usr/lib -lssl -lcrypto
+
+flag2 = -I/usr/include/mysql -g -pipe -m32 -march=i386 -mtune=pentium4 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -fno-strict-aliasing
+
+Fheader = -Wall -I./../include/
+Ftrace = -DPTRACE
+
+../bin/s: ../obj/DNS_server_main.o ../obj/DNS_dbinout_main.o ./../obj/DNS_server_util.o ../obj/DNS_update_main.o ../obj/DNS_resolver_main.o ../obj/DNS_server_handler.o ../obj/DNS_server_wrapper.o
+
+	gcc  $(Ftrace) -o ../bin/s  ../obj/DNS_server_main.o $(flag1) $(flag2) ../obj/DNS_dbinout_main.o  ./../obj/DNS_server_util.o ../obj/DNS_resolver_main.o ../obj/DNS_update_main.o ../obj/DNS_server_handler.o ../obj/DNS_server_wrapper.o
+
+../obj/DNS_server_main.o:../src/DNS_server_main.c  ./../include/DNS_server_header.h
+	gcc $(Ftrace) -g -o ../obj/DNS_server_main.o -c ../src/DNS_server_main.c $(Fheader)
+
+../obj/DNS_dbinout_main.o:../src/DNS_dbinout_main.c ./../include/DNS_server_header.h ./../include/DNS_server_database.h
+	gcc $(Ftrace) -g -o ../obj/DNS_dbinout_main.o $(flag1) $(flag2) -c ../src/DNS_dbinout_main.c  $(Fheader)
+
+../obj/DNS_resolver_main.o:../src/DNS_resolver_main.c ../include/DNS_server_header.h
+	gcc $(Ftrace) -g -o ../obj/DNS_resolver_main.o  -c ../src/DNS_resolver_main.c $(Fheader)
+
+../obj/DNS_update_main.o:../src/DNS_update_main.c ../include/DNS_server_header.h ../include/DNS_server_database.h
+	gcc $(Ftrace) -g -o ../obj/DNS_update_main.o $(flag1) $(flag2) -c ../src/DNS_update_main.c $(Fheader)
+
+../obj/DNS_server_handler.o:../src/DNS_server_handler.c ../include/DNS_server_header.h 
+	gcc $(Ftrace) -g -o ../obj/DNS_server_handler.o  -c ../src/DNS_server_handler.c $(Fheader)
+
+../obj/DNS_server_wrapper.o:../src/DNS_server_wrapper.c ../include/DNS_server_header.h 
+	gcc $(Ftrace) -g -o ../obj/DNS_server_wrapper.o  -c ../src/DNS_server_wrapper.c $(Fheader)
+
+
+../obj/DNS_server_util.o:../src/DNS_server_util.c ../include/DNS_server_header.h 
+	gcc $(Ftrace) -g -o ../obj/DNS_server_util.o  -c ../src/DNS_server_util.c $(Fheader)
+
+
+clean:
+	rm ../obj/*.o
+	rm ../bin/s
+

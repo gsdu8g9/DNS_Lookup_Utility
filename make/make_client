@@ -1,0 +1,31 @@
+		   ##################################################
+		   #  __________________________________________    #
+		   # /\                                         \   #
+		   # \_|              Make file for client      |   #
+		   #   |                                        |   #
+	   	   #   |   _____________________________________|_  #
+  		   #    \_/_______________________________________/ #
+   		   ##################################################
+
+Fheader = -Wall -I./../include/
+Ftrace = -DPTRACE
+
+../bin/c: ../obj/DNS_client_main.o ./../obj/DNS_client_util.o ../obj/DNS_client_handler.o ../obj/DNS_client_wrapper.o
+
+	gcc $(Ftrace) -o ../bin/c ../obj/DNS_client_main.o ./../obj/DNS_client_util.o ../obj/DNS_client_handler.o ../obj/DNS_client_wrapper.o
+
+../obj/DNS_client_main.o:../src/DNS_client_main.c ./../include/DNS_client_header.h 
+	gcc $(Ftrace) -g -o ../obj/DNS_client_main.o -c ../src/DNS_client_main.c $(Fheader)
+
+./../obj/DNS_client_util.o: ./../src/DNS_client_util.c ./../include/DNS_client_header.h
+	gcc -g -o ./../obj/DNS_client_util.o -c ./../src/DNS_client_util.c $(Fheader)
+
+./../obj/DNS_client_handler.o: ./../src/DNS_client_handler.c ./../include/DNS_client_header.h
+	gcc -g -o ./../obj/DNS_client_handler.o -c ./../src/DNS_client_handler.c $(Fheader)
+
+./../obj/DNS_client_wrapper.o: ./../src/DNS_client_wrapper.c ./../include/DNS_client_header.h
+	gcc -g -o ./../obj/DNS_client_wrapper.o -c ./../src/DNS_client_wrapper.c $(Fheader)
+
+clean:
+	rm ../obj/*.o
+	rm ../bin/c
